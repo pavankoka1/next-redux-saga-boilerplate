@@ -1,37 +1,35 @@
-import React from "react";
-import { connect } from "react-redux";
-import { createStructuredSelector } from "reselect";
+import React from 'react'
+import { connect } from 'react-redux'
+import { createStructuredSelector } from 'reselect'
 
-import withReduxSaga from "../";
+import withReduxSaga from '../'
 
-import { fetchPostsStart } from "../redux/post/actions";
-import {
-  selectIsPostFetching,
-  selectPostsItems,
-} from "../redux/post/selectors";
+import { fetchPostsStart } from 'redux/post/actions'
+import { selectIsPostFetching, selectPostsItems } from 'redux/post/selectors'
+
+import styles from './index.module.scss'
 
 const Home = ({ posts, isLoading }) => {
-  // console.log(posts);
-  return (
-    <div>
-      <div className="detail">
-        <ul>
-          {isLoading && <div>is loading...</div>}
-          {posts.map((post) => {
-            return <li key={post.id}>{post.title}</li>;
-          })}
-        </ul>
-      </div>
-    </div>
-  );
-};
+    return (
+        <div className={styles.wrapper}>
+            <div className="detail">
+                <ul>
+                    {isLoading && <div>is loading...</div>}
+                    {posts.map((post) => {
+                        return <li key={post.id}>{post.title}</li>
+                    })}
+                </ul>
+            </div>
+        </div>
+    )
+}
 
 Home.getInitialProps = async (props) => {
-  const { store, isServer } = props.ctx;
-  store.dispatch(fetchPostsStart());
+    const { store, isServer } = props.ctx
+    store.dispatch(fetchPostsStart())
 
-  return { isServer };
-};
+    return { isServer }
+}
 
 // const mapStateToProps = (state) => {
 //   return {
@@ -40,21 +38,16 @@ Home.getInitialProps = async (props) => {
 // };
 
 const mapStateToProps = createStructuredSelector({
-  posts: selectPostsItems,
-  isLoading: selectIsPostFetching,
-});
+    posts: selectPostsItems,
+    isLoading: selectIsPostFetching,
+})
 
 const mapDispatchToProps = (dispatch) => {
-  return {
-    fetchPostsStart: () => {
-      return dispatch(fetchPostsStart());
-    },
-  };
-};
+    return {
+        fetchPostsStart: () => {
+            return dispatch(fetchPostsStart())
+        },
+    }
+}
 
-export default withReduxSaga(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps,
-  )(Home),
-);
+export default withReduxSaga(connect(mapStateToProps, mapDispatchToProps)(Home))
